@@ -1,0 +1,580 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduLearn - Learn Engineering the Smart Way</title>
+
+  <style>
+  /* General Reset */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+  body {
+    line-height: 1.6;
+    background: #f5f6fa;
+    color: #333;
+  }
+
+  /* Navbar */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0b3d91;
+    color: #fff;
+    padding: 1rem 2rem;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo img {
+    height: 40px;
+  }
+  .logo-text {
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+    letter-spacing: 1px;
+  }
+  .nav-links {
+    display: flex;
+    list-style: none;
+  }
+  .nav-links li {
+    margin: 0 10px;
+  }
+  .nav-links a {
+    color: #fff;
+    text-decoration: none;
+    padding: 5px 10px;
+    transition: 0.3s;
+  }
+  .nav-links a:hover {
+    background: #1453c0;
+    border-radius: 5px;
+  }
+  .menu-icon {
+    display: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+  }
+  .btn {
+    background: #ff9800;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: 0.3s;
+  }
+  .btn:hover {
+    background: #e68900;
+  }
+
+  /* Hero Section */
+  .hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 3rem 2rem;
+    background: #eef3fb;
+    flex-wrap: wrap;
+  }
+  .hero-text {
+    max-width: 500px;
+  }
+  .hero-text h1 {
+    font-size: 3rem;
+    line-height: 1.2;
+  }
+  .hero-text span {
+    color: #ff9800;
+  }
+  .hero-text p {
+    margin: 15px 0;
+    font-size: 1.1rem;
+  }
+  .hero-img img {
+    width: 550px;
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+
+  /* Features Section */
+  .features-section {
+    padding: 50px 20px;
+    text-align: center;
+  }
+  .features-section h2 {
+    font-size: 32px;
+    margin-bottom: 40px;
+    font-weight: bold;
+    color: #333;
+  }
+  .features-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .feature-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    text-align: center;
+    transition: 0.3s;
+    overflow: hidden;
+  }
+  .feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  .feature-card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+  }
+  .feature-card h3 {
+    font-size: 20px;
+    margin: 15px 0 10px;
+    color: #222;
+  }
+  .feature-card p {
+    font-size: 14px;
+    color: #666;
+    padding: 0 10px 20px;
+  }
+
+  /* About Section */
+  .about-section {
+    background: #f9f9f9;
+    padding: 80px 20px;
+    text-align: center;
+  }
+  .about-section .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .section-title {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 40px;
+    color: #0b3d91;
+    position: relative;
+  }
+  .section-title::after {
+    content: "";
+    display: block;
+    width: 80px;
+    height: 4px;
+    background: #ff7f50;
+    margin: 10px auto 0;
+    border-radius: 2px;
+  }
+  .intro-box {
+    background: linear-gradient(135deg, #0b3d91, #1e90ff);
+    color: #fff;
+    padding: 30px 20px;
+    border-radius: 12px;
+    margin-bottom: 50px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  }
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 50px;
+  }
+  .info-card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: transform 0.3s;
+  }
+  .info-card:hover {
+    transform: translateY(-5px);
+  }
+  .stats-grid {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 50px;
+    flex-wrap: wrap;
+  }
+  .stat-box {
+    flex: 1;
+    min-width: 200px;
+    background: #0b3d91;
+    color: #fff;
+    padding: 30px 20px;
+    border-radius: 12px;
+  }
+  .stat-box h3 {
+    font-size: 32px;
+    color: #ff7f50;
+  }
+  .team-grid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .member {
+    background: #fff;
+    padding: 15px;
+    border-radius: 12px;
+    width: 250px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    text-align: center;
+    transition: transform 0.3s;
+  }
+  .member img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    border: 4px solid #ff7f50;
+  }
+  .member:hover {
+    transform: translateY(-5px);
+  }
+
+  /* Courses */
+  .courses {
+    padding: 2rem;
+    text-align: center;
+  }
+  .course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 2rem;
+  }
+  .course-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .course-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  }
+  .course-img {
+    position: relative;
+  }
+  .course-img img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+  }
+  .rating {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ff9800;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+  }
+  .course-content {
+    padding: 1rem;
+    text-align: left;
+  }
+  .course-content h3 {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+  }
+  .course-content p {
+    margin: 5px 0;
+    color: #555;
+  }
+  .explore-btn {
+    display: inline-block;
+    margin-top: 10px;
+    background: #0b3d91;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: 0.3s;
+  }
+  .explore-btn:hover {
+    background: #1453c0;
+  }
+
+  /* Contact Section */
+  .contact-section {
+    background: #f9f9f9;
+    padding: 80px 20px;
+    text-align: center;
+  }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+  .info-box {
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  .social-links a {
+    display: inline-block;
+    margin-right: 15px;
+    text-decoration: none;
+    color: #0b3d91;
+    font-weight: bold;
+  }
+  .social-links a:hover {
+    color: #ff7f50;
+  }
+  .contact-form form {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    text-align: left;
+  }
+  .contact-form input, .contact-form textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+  .contact-form .btn {
+    background: #ff7f50;
+    color: white;
+    border: none;
+    padding: 14px 25px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 18px;
+  }
+  .contact-form .btn:hover {
+    background: #e96a3a;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 1rem;
+    background: #0b3d91;
+    color: white;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none;
+      flex-direction: column;
+      background: #0b3d91;
+      position: absolute;
+      top: 60px;
+      right: 0;
+      width: 200px;
+    }
+    .menu-icon {
+      display: block;
+    }
+    .hero {
+      flex-direction: column;
+      text-align: center;
+    }
+    .contact-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <nav class="navbar">
+    <div class="logo">
+      <img src="{% static 'img/logo.png' %}" alt="EduLearn Logo">
+      <span class="logo-text">EduLearn</span>
+    </div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#courses">Courses</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <span class="menu-icon" onclick="toggleMenu()">☰</span>
+  </nav>
+</header>
+
+<section id="home" class="hero">
+  <div class="hero-text">
+    <h1>Learn Engineering the <span>Smart Way</span></h1>
+    <p>Notes, Previous Papers, Projects and Resources all in one place.</p>
+    <a href="#courses" class="btn">Explore Courses</a>
+    <a href="{% url 'take_test' %}" class="btn" style="margin-left: 10px; background: #4CAF50;">Take Test</a>
+
+  </div>
+  <div class="hero-img">
+    <img src="{% static 'img/hero-image.jpg' %}" alt="Students Learning">
+  </div>
+</section>
+
+<section class="features-section">
+  <h2>Our Features</h2>
+  <div class="features-container">
+    <div class="feature-card">
+      <img src="{% static 'img/notes.png' %}" alt="Notes">
+      <h3>Notes</h3>
+      <p>Concise notes for all core engineering subjects.</p>
+    </div>
+    <div class="feature-card">
+      <img src="{% static 'img/papers.png' %}" alt="Previous Papers">
+      <h3>Previous Papers</h3>
+      <p>Search past year papers with solutions.</p>
+    </div>
+    <div class="feature-card">
+      <img src="{% static 'img/projects.png' %}" alt="Projects">
+      <h3>Projects</h3>
+      <p>Get project ideas with clear requirements & tech stack.</p>
+    </div>
+    <div class="feature-card">
+      <img src="{% static 'img/resources.png' %}" alt="Resources">
+      <h3>Resources</h3>
+      <p>Links to tutorials, cheat-sheets, and coding practice.</p>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="about-section">
+  <div class="container">
+    <h2 class="section-title">About Us</h2>
+    <div class="intro-box">
+      <p>
+        Welcome to <strong>Edu-Learning</strong>, your trusted platform for engineering education. 
+        We are committed to making engineering knowledge accessible, practical, and industry-ready.
+      </p>
+    </div>
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>🎯 Our Vision</h3>
+        <p>To inspire and empower the next generation of engineers through innovation and excellence in learning.</p>
+      </div>
+      <div class="info-card">
+        <h3>🚀 Our Mission</h3>
+        <p>Providing high-quality courses, projects, and mentorship to help students and professionals succeed in engineering.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="courses" class="courses">
+  <h2>Popular Courses</h2>
+  <div class="course-grid">
+    <div class="course-card">
+      <div class="course-img">
+        <img src="{% static 'img/course1.jpg' %}" alt="Full Stack Development">
+        <span class="rating">⭐ 3.5</span>
+      </div>
+      <div class="course-content">
+        <h3>Full Stack Development with React & Node JS</h3>
+        <p>Project Based Training</p>
+        <p class="level">👨‍🎓 Beginner to Advance</p>
+        <a href="#" class="explore-btn">Explore now</a>
+      </div>
+    </div>
+    <div class="course-card">
+      <div class="course-img">
+        <img src="{% static 'img/course2.jpg' %}" alt="Tech Interview">
+        <span class="rating">⭐ 4.9</span>
+      </div>
+      <div class="course-content">
+        <h3>Tech Interview of DSA</h3>
+        <p>Complete Interview Preparation</p>
+        <p class="level">👨‍🎓 Beginner to Advance</p>
+        <a href="#" class="explore-btn">Explore now</a>
+      </div>
+    </div>
+    <div class="course-card">
+      <div class="course-img">
+        <img src="{% static 'img/course3.jpg' %}" alt="C++ Course">
+        <span class="rating">⭐ 4.7</span>
+      </div>
+      <div class="course-content">
+        <h3>C++ Programming Course - Complete Beginner to Advanced</h3>
+        <p>Master C++ with Hands-on</p>
+        <p class="level">👨‍🎓 Beginner to Advance</p>
+        <a href="#" class="explore-btn">Explore now</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact-section">
+  <div class="container">
+    <h2 class="section-title">Contact Us</h2>
+    <p class="section-subtitle">Have questions? Reach out to us for support, admissions, or collaborations.</p>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="info-box">
+          <h3>📍 Our Address</h3>
+          <p>123 Engineering Lane, Tech City, India</p>
+        </div>
+        <div class="info-box">
+          <h3>📞 Call Us</h3>
+          <p>+91 98765 43210</p>
+        </div>
+        <div class="info-box">
+          <h3>✉️ Email Us</h3>
+          <p>support@edu-learning.com</p>
+        </div>
+        <div class="social-links">
+          <a href="#">🔗 LinkedIn</a>
+          <a href="#">📘 Facebook</a>
+          <a href="#">📸 Instagram</a>
+          <a href="#">▶️ YouTube</a>
+        </div>
+      </div>
+      <div class="contact-form">
+        <form>
+          <input type="text" placeholder="Your Name" required>
+          <input type="email" placeholder="Your Email" required>
+          <input type="text" placeholder="Subject" required>
+          <textarea placeholder="Your Message" rows="5" required></textarea>
+          <button type="submit" class="btn">Send Message</button>
+        </form>
+      </div>
+    </div>
+    <p class="cta-text">💡 We’ll get back to you within 24 hours!</p>
+  </div>
+</section>
+
+<footer>
+  <p>© <span id="year"></span> EduLearn. All rights reserved.</p>
+</footer>
+
+<script>
+function toggleMenu() {
+  const nav = document.getElementById('navLinks');
+  nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+}
+document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
