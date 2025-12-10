@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Roadmap Generator | EduWeb</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+  <div class="bg-white shadow-xl rounded-2xl p-8 w-full max-w-lg">
+    <h1 class="text-2xl font-bold mb-6 text-indigo-600">📍 Generate Learning Roadmap</h1>
+    <form method="post" action="{% url 'roadmap_generate' %}" class="space-y-5">
+      {% csrf_token %}
+      <div>
+        <label class="block font-semibold mb-1">Language</label>
+        <select name="language" class="w-full border rounded-lg p-3">
+          {% for l in langs %}
+            <option value="{{l}}">{{l|capfirst}}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label class="block font-semibold mb-1">Level</label>
+        <select name="level" class="w-full border rounded-lg p-3">
+          {% for lv in levels %}
+            <option value="{{lv}}">{{lv}}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="flex gap-3">
+        <button class="bg-indigo-600 text-white px-5 py-3 rounded-lg hover:bg-indigo-700">Generate</button>
+        <button formaction="{% url 'roadmap_pdf' %}" class="bg-green-600 text-white px-5 py-3 rounded-lg hover:bg-green-700">Download PDF</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

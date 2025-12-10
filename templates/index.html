@@ -408,18 +408,27 @@
 
 <header>
   <nav class="navbar">
-    <div class="logo">
-      <img src="{% static 'img/logo.png' %}" alt="EduLearn Logo">
-      <span class="logo-text">EduLearn</span>
-    </div>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="#home">Home</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#courses">Courses</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-    <span class="menu-icon" onclick="toggleMenu()">☰</span>
-  </nav>
+  <div class="logo">
+    <img src="{% static 'img/logo.png' %}" alt="EduLearn Logo">
+    <span class="logo-text">EduLearn</span>
+  </div>
+
+  <ul class="nav-links" id="navLinks">
+    <li><a href="/dashboard/">Dashboard</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#courses">Courses</a></li>
+    <li><a href="#contact">Contact</a></li>
+
+    <li>
+      <a href="/roadmap/" 
+         class="block bg-indigo-600 text-white text-center p-4 rounded-lg font-semibold hover:bg-indigo-700">
+        Learning Roadmap
+      </a>
+    </li>
+  </ul>
+
+  <span class="menu-icon" onclick="toggleMenu()">☰</span>
+</nav>
 </header>
 
 <section id="home" class="hero">

@@ -11,59 +11,54 @@
 
   <div class="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md transform transition-all hover:scale-[1.02] duration-300">
     <h2 class="text-3xl font-bold text-center mb-6 text-indigo-600">🧠 Ready to Take a Test?</h2>
-    <p class="text-gray-600 text-center mb-8">Select your preferences below to begin.</p>
 
-    <form id="testForm" class="space-y-5">
+    {% if can_choose_language %}
+      <p class="text-gray-600 text-center mb-8">
+        Choose your <b>next language</b> (you’ll start at <b>Beginner</b>).
+      </p>
+    {% else %}
+      <p class="text-gray-600 text-center mb-8">
+        You’ll continue on your current path:
+        <b>{{ current_language|title }}</b> – <b>{{ current_level }}</b>.
+      </p>
+    {% endif %}
 
-      <!-- Programming Language -->
-      <div>
-        <label class="block text-gray-700 font-semibold mb-2">Programming Language</label>
-        <select id="language" required
-          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-          <option value="">-- Select Language --</option>
-          <option value="python">Python</option>
-          <option value="java">Java</option>
-          <option value="cpp">C++</option>
-          <option value="javascript">JavaScript</option>
-        </select>
-      </div>
+    <form method="post" class="space-y-5">
+      {% csrf_token %}
 
-      <!-- Difficulty Level -->
-      <div>
-        <label class="block text-gray-700 font-semibold mb-2">Difficulty Level</label>
-        <select id="difficulty" required
-          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-          <option value="">-- Select Difficulty --</option>
-          <option value="beginner">Beginner</option>
-          <option value="intermediate">Intermediate</option>
-          <option value="advanced">Advanced</option>
-        </select>
-      </div>
+      {% if can_choose_language %}
+        <!-- Programming Language (only when Python Legend) -->
+        <div>
+          <label class="block text-gray-700 font-semibold mb-2">Choose Next Language</label>
+          <select name="language" required
+            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            <option value="">-- Select Language --</option>
+            {% for lang in available_languages %}
+              <option value="{{ lang }}">{{ lang|title }}</option>
+            {% endfor %}
+          </select>
+          <p class="text-xs text-gray-500 mt-1">
+            Difficulty will automatically be set to <b>Beginner</b>.
+          </p>
+        </div>
+      {% else %}
+        <!-- No manual choice: show current path -->
+        <div class="bg-gray-50 border border-dashed border-gray-300 rounded-lg p-3">
+          <p class="text-sm text-gray-700">
+            <b>Language:</b> {{ current_language|title }}<br>
+            <b>Level:</b> {{ current_level }}
+          </p>
+        </div>
+      {% endif %}
 
-      <!-- Submit -->
       <div class="text-center">
         <button type="submit"
           class="bg-indigo-600 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 transition-all duration-200">
           🚀 Start Test
         </button>
       </div>
-
     </form>
   </div>
-
-
-<script>
-  document.getElementById("testForm").onsubmit = function(e) {
-    e.preventDefault();
-
-    const lang = document.getElementById("language").value;
-    const difficulty = document.getElementById("difficulty").value;
-    const username = "{{ request.user.username }}";
-
-    // Redirect to Streamlit with params
-    window.location.href = `http://localhost:8501/?user=${username}&lang=${lang}&level=${difficulty}`;
-  };
-</script>
 
 </body>
 </html>

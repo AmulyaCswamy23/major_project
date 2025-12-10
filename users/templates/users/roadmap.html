@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Roadmap | {{plan.language|capfirst}} - {{plan.level}}</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+  <div class="max-w-3xl mx-auto my-10 bg-white shadow-lg rounded-xl p-8">
+    <h1 class="text-2xl font-bold mb-2"> Roadmap: {{plan.language|capfirst}} — {{plan.level}}</h1>
+    <p class="text-gray-600 mb-6">4-week, topic-driven plan with practice + resources.</p>
+
+    <h2 class="font-semibold mt-4 mb-2">Core Resources</h2>
+    <ul class="list-disc ml-6 text-blue-700">
+      {% for title, url in plan.youtube %}
+        <li><a href="{{url}}" target="_blank" class="underline">{{title}}</a></li>
+      {% endfor %}
+      <li><a href="{{plan.hackerrank}}" target="_blank" class="underline">HackerRank (domain)</a></li>
+      {% for title, url in plan.udemy %}
+        <li><a href="{{url}}" target="_blank" class="underline">{{title}}</a></li>
+      {% endfor %}
+    </ul>
+
+    <div class="mt-6 space-y-4">
+      {% for wk in plan.weeks %}
+        <div class="border rounded-lg p-4">
+          <div class="font-semibold">{{wk.title}}</div>
+          <div class="text-gray-500 text-sm mb-2">{{wk.start}} → {{wk.end}}</div>
+          <ul class="list-disc ml-6">
+            {% for m in wk.milestones %}
+              <li>{{m}}</li>
+            {% endfor %}
+          </ul>
+          <div class="mt-2 text-sm text-amber-700 bg-amber-50 inline-block px-2 py-1 rounded">
+            🔒 Next test unlock suggestion: {{wk.lock_next_test_until}}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <form method="post" action="{% url 'roadmap_pdf' %}" class="mt-6">
+      {% csrf_token %}
+      <input type="hidden" name="language" value="{{plan.language}}">
+      <input type="hidden" name="level" value="{{plan.level}}">
+      <button class="bg-green-600 text-white px-5 py-3 rounded-lg hover:bg-green-700">Download as PDF</button>
+    </form>
+  </div>
+</body>
+</html>

@@ -1,461 +1,584 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Online Test | EduWeb</title>
-
+  <title>EduWeb Test Platform</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    :root {
+      --brand:#4a90e2;
+      --ok:#28a745;
+      --warn:#f39c12;
+      --bg:#f4f7fa;
+      --card:#fff;
+      --text:#222;
+      --muted:#666;
+    }
+    * { box-sizing: border-box; }
     body {
-      background: #f4f7fa;
-      font-family: 'Poppins', sans-serif;
+      background:var(--bg);
+      font-family: system-ui,-apple-system, Segoe UI, Roboto, Poppins, sans-serif;
+      margin:0;
+      color:var(--text);
     }
-
-    .test-header {
-      background: #4a90e2;
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      padding: 15px 30px;
-      align-items: center;
+    .header {
+      background:var(--brand);
+      color:#fff;
+      padding:14px 22px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
     }
-
-    .test-info span {
-      margin-left: 15px;
-      font-weight: 500;
+    .wrap {
+      max-width:1100px;
+      margin:24px auto;
+      display:grid;
+      grid-template-columns: 3fr 1fr;
+      gap:20px;
+      padding:0 12px;
     }
-
-    .test-main {
-      display: flex;
-      max-width: 1100px;
-      margin: 30px auto;
-      gap: 20px;
+    .card {
+      background:var(--card);
+      border-radius:14px;
+      box-shadow:0 4px 12px rgba(0,0,0,.08);
+      padding:20px;
     }
-
-    .question-panel {
-      flex: 3;
-      background: white;
-      border-radius: 15px;
-      padding: 25px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      position: relative;
-    }
-
-    .tracker-panel {
-      flex: 1;
-      background: white;
-      border-radius: 15px;
-      padding: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      height: fit-content;
-    }
-
     .progress-bar {
-      height: 8px;
-      background: #e0e0e0;
-      border-radius: 5px;
-      margin-bottom: 20px;
+      height:8px;
+      background:#e0e0e0;
+      border-radius:6px;
+      overflow:hidden;
+      margin-bottom:16px;
     }
-
     .progress {
-      height: 8px;
-      width: 0%;
-      background: #4a90e2;
-      border-radius: 5px;
-      transition: width 0.3s;
+      height:100%;
+      width:0%;
+      background:var(--brand);
+      transition:width .3s ease;
     }
-
-    .question-box {
-      margin-bottom: 20px;
+    .qtext {
+      margin:12px 0 8px;
+      font-weight:600;
+      line-height:1.4;
     }
-
-    .options label {
-      display: block;
-      padding: 10px;
-      background: #f9f9f9;
-      border-radius: 10px;
-      margin: 8px 0;
-      cursor: pointer;
-      border: 1px solid transparent;
-      transition: 0.3s;
+    .opt {
+      background:#f9f9f9;
+      border-radius:10px;
+      padding:10px;
+      margin:8px 0;
+      cursor:pointer;
+      border:1px solid transparent;
     }
-
-    .options label:hover {
-      background: #e9f0ff;
-      border-color: #4a90e2;
+    .opt:hover { background:#eef5ff; border-color:var(--brand); }
+    .opt label {
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      width:100%;
+      cursor:pointer;
     }
-
-    .button-group {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 20px;
-      align-items: center;
+    .opt input[type="radio"] { margin-top:2px; flex:0 0 auto; }
+    .opt .opt-text {
+      white-space:normal;
+      word-break:break-word;
+      overflow-wrap:anywhere;
+      line-height:1.35;
+      display:block;
     }
-
+    .row {
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      margin-top:14px;
+      flex-wrap:wrap;
+    }
     .btn {
-      padding: 10px 20px;
-      border: none;
-      background: #4a90e2;
-      color: white;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
+      background:var(--brand);
+      color:#fff;
+      border:0;
+      border-radius:8px;
+      padding:10px 16px;
+      cursor:pointer;
+      font-weight:600;
     }
-
-    .btn:hover {
-      opacity: 0.9;
+    .btn:disabled{
+      opacity:.6;
+      cursor:not-allowed;
     }
-
-    .submit-btn {
-      background: #28a745;
+    .btn.alt { background:var(--ok); }
+    .btn.warn { background:var(--warn); }
+    .btn.ghost { background:#efefef; color:#333; }
+    .grid {
+      display:grid;
+      grid-template-columns:repeat(5, 1fr);
+      gap:8px;
     }
-
-    .hint-btn {
-      background: #f39c12;
+    .grid button {
+      height:38px;
+      border:0;
+      border-radius:8px;
+      background:#ddd;
+      font-weight:700;
+      cursor:pointer;
     }
-
-    .tracker-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
+    .grid button.active { background:var(--brand); color:#fff; }
+    .grid button.answered { background:var(--ok); color:#fff; }
+    .hint {
+      display:none;
+      background:#fff8e1;
+      border-left:5px solid var(--warn);
+      padding:12px;
+      border-radius:8px;
+      margin-top:10px;
     }
-
-    .tracker-grid button {
-      width: 40px;
-      height: 40px;
-      border-radius: 8px;
-      border: none;
-      background: #ddd;
-      cursor: pointer;
-      font-weight: bold;
+    .pill {
+      background:#fff;
+      color:#333;
+      padding:6px 10px;
+      border-radius:999px;
+      font-weight:600;
+      font-size:14px;
     }
-
-    .tracker-grid button.active {
-      background: #4a90e2;
-      color: white;
+    .pill-select {
+      border-radius:999px;
+      border:none;
+      padding:6px 10px;
+      font-weight:600;
+      font-size:14px;
+      font-family:inherit;
+      outline:none;
+      cursor:pointer;
     }
-
-    .tracker-grid button.answered {
-      background: #28a745;
-      color: white;
+    .footer {
+      text-align:center;
+      padding:18px;
+      color:#777;
+      font-size:14px;
     }
-
-    /* Hint Box */
-    #hint-box {
-      display: none;
-      background: #fff8e1;
-      border-left: 5px solid #f39c12;
-      padding: 15px;
-      border-radius: 8px;
-      margin-top: 15px;
-      color: #333;
-      animation: fadeIn 0.5s;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.4);
-      justify-content: center;
-      align-items: center;
-    }
-
-    .modal-content {
-      background: white;
-      padding: 25px;
-      border-radius: 10px;
-      width: 300px;
-      text-align: center;
-    }
-
-    /* Result screen */
-    .result-screen {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      background: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
+    .hidden { display:none !important; }
+    @media (max-width: 920px) {
+      .wrap { grid-template-columns: 1fr; }
+      .header-right { flex-wrap: wrap; gap:8px; justify-content: flex-end; }
     }
   </style>
 </head>
 <body>
-  <!-- Header -->
-  <header class="test-header">
-    <h2 class="test-title">EduWeb Test Platform</h2>
-    <div class="test-info">
-      <span id="username">User: Loading...</span>
-      <span id="timer">Time Left: 10:00</span>
+  <header class="header">
+    <div style="font-size:18px; font-weight:700;">🧠 EduWeb Test Platform</div>
+    <div class="header-right" style="display:flex; gap:12px; align-items:center;">
+      <span id="user-pill" class="pill">User: Loading…</span>
+
+      <!-- 🔽 Language selector: user can choose any language -->
+      <select id="lang-select" class="pill-select">
+        <option value="python" {% if language == "python" %}selected{% endif %}>Python</option>
+        <option value="java" {% if language == "java" %}selected{% endif %}>Java</option>
+        <option value="cpp" {% if language == "cpp" %}selected{% endif %}>C++</option>
+        <option value-"c" {% if language == "c" %}selected{% endif %}>C</option>
+      </select>
+
+      <span id="ctx-pill" class="pill">
+        Lang: {{language}} | Level: {{difficulty}}
+      </span>
+      <span id="timer-pill" class="pill">Time Left: 10:00</span>
+
+      <!-- Logout button -->
+      <form method="post" action="{% url 'logout' %}" style="margin:0;">
+        {% csrf_token %}
+        <button type="submit" class="btn ghost" style="padding:6px 12px; font-size:14px;">
+          Logout
+        </button>
+      </form>
     </div>
   </header>
 
-  <!-- Main container -->
-  <main class="test-main">
-    <!-- Left: Question Panel -->
-    <section class="question-panel">
-      <div class="progress-bar">
-        <div id="progress" class="progress"></div>
+  <main class="wrap">
+    <section class="card">
+      <div class="progress-bar"><div id="progress" class="progress"></div></div>
+
+      <div class="row">
+        <button id="start-btn" class="btn" type="button">Start Test</button>
       </div>
 
-      <div id="question-box" class="question-box">
-        <h3 id="question-number"></h3>
-        <p id="question-text">Loading question...</p>
-        <div id="options-container" class="options"></div>
-      </div>
+      <div id="status" style="margin-top:10px; color:#666;"></div>
 
-      <!-- Hint Box -->
-      <div id="hint-box"></div>
+      <div id="qbox" style="margin-top:16px;">
+        <div id="qnum" style="font-weight:700;"></div>
+        <div id="qtext" class="qtext">No question loaded yet.</div>
+        <div id="opts"></div>
 
-      <div class="button-group">
-        <button id="hint-btn" class="btn hint-btn">💡 Hint</button>
-        <div>
-          <button id="prev-btn" class="btn" disabled>Previous</button>
-          <button id="next-btn" class="btn">Next</button>
-          <button id="submit-btn" class="btn submit-btn" style="display:none;">Submit</button>
+        <div id="hint" class="hint" aria-live="polite"></div>
+
+        <div class="row">
+          <button id="hint-btn" class="btn warn" type="button">💡 Hint</button>
+          <div>
+            <button id="prev-btn" class="btn" type="button" disabled>Previous</button>
+            <button id="next-btn" class="btn" type="button">Next</button>
+            <button id="submit-btn" class="btn alt hidden" type="button">Submit</button>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Right: Tracker Panel -->
-    <aside class="tracker-panel">
-      <h4>Question Tracker</h4>
-      <div id="tracker-grid" class="tracker-grid"></div>
+    <aside class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <h3 style="margin:0;">Question Tracker</h3>
+        <span id="hints-pill" class="pill">Hints: 0</span>
+      </div>
+      <div id="tracker" class="grid"></div>
     </aside>
   </main>
 
-  <!-- Submit Confirmation Modal -->
-  <div id="confirm-modal" class="modal">
-    <div class="modal-content">
-      <h3>Submit Test?</h3>
-      <p id="attempt-info"></p>
-      <div class="modal-actions">
-        <button id="cancel-submit" class="btn">Cancel</button>
-        <button id="confirm-submit" class="btn submit-btn">Yes, Submit</button>
-      </div>
-    </div>
-  </div>
+  <div class="footer">© EduWeb</div>
 
-  <!-- Result Screen -->
-  <div id="result-screen" class="result-screen" style="display:none;">
-    <h2>Test Result</h2>
-    <p id="score-display">Score: --</p>
-    <div id="result-details"></div>
-    <button class="btn" onclick="location.reload()">Take Again</button>
-  </div>
 <script>
-  let questions = [];
-  let current = 0;
-  let answers = {};
-  let totalTime = 10 * 60; // 10 minutes
+/* ---------- config (Django template vars) ---------- */
+/* We treat these as initial suggestions from backend */
+let currentLang = "{{language}}";
+let currentLevel = "{{difficulty}}";   // RL / rules may set this
+// When user changes language from dropdown, we force currentLevel = "Beginner"
 
-  async function loadUser() {
-    const res = await fetch('/api/user');
-    const data = await res.json();
-    document.getElementById('username').textContent = `User: ${data.name}`;
+const MCQ_API = "/api/questions/";
+const HINT_API = "/api/hint/";
+const SAVE_API = "/api/submit_test/";
+const USER_API = "/api/user";
+
+const TOTAL_SECONDS = 10 * 60;
+const CAN_TAKE = Boolean(Number("{{ can_take|yesno:'1,0' }}")); // from start_test_page view
+
+/* ---------- state ---------- */
+let questions = [];
+let idx = 0;
+let answers = {};
+let hintsUsed = 0;
+let timer = null;
+let remaining = TOTAL_SECONDS;
+
+/* ---------- DOM helpers ---------- */
+function $(id){ return document.getElementById(id); }
+function setStatus(msg, type="info"){
+  $("status").style.color = (type==="error" ? "#c0392b" : "#666");
+  $("status").textContent = msg || "";
+}
+
+/* ---------- user pill ---------- */
+async function loadUser(){
+  try{
+    const r = await fetch(USER_API, { credentials: "include" });
+    const data = await r.json();
+    $("user-pill").textContent = `User: ${data.username || "—"}`;
+  } catch {
+    $("user-pill").textContent = "User: —";
   }
+}
 
-  async function loadQuestions() {
-    try {
-      const res = await fetch('/api/questions');
-      questions = await res.json();
-      createTracker();
-      showQuestion(current);
-      startTimer();
-    } catch (e) {
-      document.getElementById('question-text').textContent = 'Error loading questions.';
-    }
+/* ---------- timer ---------- */
+function startTimer(){
+  clearInterval(timer);
+  remaining = TOTAL_SECONDS;
+  tick();
+  timer = setInterval(tick,1000);
+}
+function tick(){
+  if(remaining <= 0){
+    clearInterval(timer);
+    $("timer-pill").textContent = "Time Left: 00:00";
+    setStatus("⛔ Time's up — auto-submitting...");
+    submitNow();
+    return;
   }
+  remaining--;
+  const m = String(Math.floor(remaining/60)).padStart(2,"0");
+  const s = String(remaining % 60).padStart(2,"0");
+  $("timer-pill").textContent = `Time Left: ${m}:${s}`;
+}
 
-  async function getHint() {
-    const q = questions[current];
-    if (!q) return;
-
-    const hintBox = document.getElementById('hint-box');
-    hintBox.style.display = 'block';
-    hintBox.textContent = 'Loading hint...';
-
-    try {
-      const res = await fetch('/api/hint', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: q.question })
-      });
-      const data = await res.json();
-      hintBox.textContent = `💡 Hint: ${data.hint}`;
-
-      // Hide after 10 seconds
-      setTimeout(() => hintBox.style.display = 'none', 10000);
-    } catch {
-      hintBox.textContent = 'Error generating hint.';
-      setTimeout(() => hintBox.style.display = 'none', 5000);
-    }
-  }
-
-  document.getElementById('hint-btn').onclick = getHint;
-
-  function showQuestion(index) {
-    const q = questions[index];
-    if (!q) return;
-
-    document.getElementById('question-number').textContent = `Question ${index + 1} of ${questions.length}`;
-    document.getElementById('question-text').textContent = q.question;
-
-    const optionsContainer = document.getElementById('options-container');
-    optionsContainer.innerHTML = '';
-
-    q.options.forEach(opt => {
-      const label = document.createElement('label');
-      label.innerHTML = `
-        <input type="radio" name="q${index}" value="${opt}" ${answers[index] === opt ? 'checked' : ''}> ${opt}
-      `;
-      optionsContainer.appendChild(label);
-    });
-
-    document.getElementById('prev-btn').disabled = index === 0;
-    document.getElementById('next-btn').style.display = index === questions.length - 1 ? 'none' : 'inline-block';
-    document.getElementById('submit-btn').style.display = index === questions.length - 1 ? 'inline-block' : 'none';
-    updateProgress();
-    updateTracker();
-  }
-
-  function saveAnswer() {
-    const selected = document.querySelector(`input[name="q${current}"]:checked`);
-    if (selected) answers[current] = selected.value;
-  }
-
-  document.getElementById('next-btn').onclick = () => {
-    saveAnswer();
-    if (current < questions.length - 1) current++;
-    showQuestion(current);
+/* ---------- question helpers ---------- */
+function normalizeQ(q){
+  return {
+    q: String(q.question ?? q.q ?? ""),
+    options: Array.isArray(q.options) ? q.options.slice(0,4) : [],
+    answer: String(q.answer ?? "")
   };
+}
 
-  document.getElementById('prev-btn').onclick = () => {
-    saveAnswer();
-    if (current > 0) current--;
-    showQuestion(current);
-  };
+function renderQuestion(i){
+  if(!questions[i]) return;
+  const q = normalizeQ(questions[i]);
+  $("qnum").textContent = `Question ${i+1} of ${questions.length}`;
+  $("qtext").textContent = q.q;
 
-  document.getElementById('submit-btn').onclick = () => {
-    saveAnswer();
-    const attempted = Object.keys(answers).length;
-    document.getElementById('attempt-info').textContent =
-      `You have answered ${attempted} out of ${questions.length} questions.`;
-    document.getElementById('confirm-modal').style.display = 'flex';
-  };
+  $("hint").style.display = "none";
+  $("hint").textContent = "";
 
-  document.getElementById('cancel-submit').onclick = () =>
-    document.getElementById('confirm-modal').style.display = 'none';
+  const opts = $("opts");
+  opts.innerHTML = "";
 
-  document.getElementById('confirm-submit').onclick = async () => {
-    document.getElementById('confirm-modal').style.display = 'none';
-    try {
-      const res = await fetch('/api/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(answers)
-      });
-      const result = await res.json();
-      showResult(result);
-    } catch {
-      alert('Error submitting test.');
-    }
-  };
-
-  function updateProgress() {
-    const percent = ((current + 1) / questions.length) * 100;
-    document.getElementById('progress').style.width = `${percent}%`;
-  }
-
-  function createTracker() {
-    const grid = document.getElementById('tracker-grid');
-    grid.innerHTML = '';
-    for (let i = 0; i < questions.length; i++) {
-      const btn = document.createElement('button');
-      btn.textContent = i + 1;
-      btn.onclick = () => {
-        saveAnswer();
-        current = i;
-        showQuestion(current);
-      };
-      grid.appendChild(btn);
-    }
-  }
-
-  function updateTracker() {
-    const buttons = document.querySelectorAll('.tracker-grid button');
-    buttons.forEach((btn, i) => {
-      btn.classList.toggle('active', i === current);
-      btn.classList.toggle('answered', answers[i]);
-    });
-  }
-
-  function startTimer() {
-    const timerDisplay = document.getElementById('timer');
-    const timer = setInterval(() => {
-      if (totalTime <= 0) {
-        clearInterval(timer);
-        document.getElementById('submit-btn').click();
-        return;
-      }
-      totalTime--;
-      const min = Math.floor(totalTime / 60);
-      const sec = totalTime % 60;
-      timerDisplay.textContent = `Time Left: ${min}:${sec < 10 ? '0' : ''}${sec}`;
-    }, 1000);
-  }
-
-  function showResult(result) {
-    document.querySelector('.test-main').style.display = 'none';
-    document.querySelector('.test-header').style.display = 'none';
-    document.getElementById('result-screen').style.display = 'flex';
-    document.getElementById('score-display').textContent = `Score: ${result.score}`;
-    document.getElementById('result-details').innerHTML = `
-      <p>Correct: ${result.correct}</p>
-      <p>Incorrect: ${result.incorrect}</p>
-      <p>Percentage: ${result.percentage}%</p>
+  q.options.forEach((opt,k)=>{
+    const id = `q_${i}_${k}`;
+    const row = document.createElement("div");
+    row.className = "opt";
+    row.innerHTML = `
+      <label for="${id}">
+        <input type="radio" name="q_${i}" id="${id}" value="${opt}">
+        <span class="opt-text">${opt}</span>
+      </label>
     `;
+    const input = row.querySelector("input");
+    if(answers[i] === opt) input.checked = true;
+    input.addEventListener("change", ()=>{
+      answers[i] = opt;
+      updateTracker();
+    });
+    opts.appendChild(row);
+  });
+
+  $("prev-btn").disabled = i === 0;
+  $("next-btn").classList.toggle("hidden", i === questions.length - 1);
+  $("submit-btn").classList.toggle("hidden", i !== questions.length - 1);
+
+  updateProgress();
+  updateTracker();
+}
+
+function updateProgress(){
+  const pct = questions.length ? ((idx+1)/questions.length)*100 : 0;
+  $("progress").style.width = `${pct}%`;
+}
+
+function buildTracker(){
+  const t = $("tracker");
+  t.innerHTML = "";
+  for(let i=0;i<questions.length;i++){
+    const btn = document.createElement("button");
+    btn.textContent = i+1;
+    btn.addEventListener("click", ()=>{
+      idx = i;
+      renderQuestion(idx);
+    });
+    t.appendChild(btn);
+  }
+  updateTracker();
+}
+
+function updateTracker(){
+  const btns = $("tracker").querySelectorAll("button");
+  btns.forEach((b,i)=>{
+    b.classList.toggle("active", i===idx);
+    b.classList.toggle("answered", !!answers[i]);
+  });
+}
+
+/* ---------- network helpers ---------- */
+function getCSRF(){
+  const m = document.cookie.match(/csrftoken=([^;]+)/);
+  return m ? m[1] : "";
+}
+
+async function fetchMCQs(){
+  const url = `${MCQ_API}?lang=${encodeURIComponent(currentLang)}&level=${encodeURIComponent(currentLevel)}`;
+  const res = await fetch(url, { credentials: "include" });
+  if(!res.ok) throw new Error("Failed to fetch questions");
+  const data = await res.json();
+  return data.map(normalizeQ);
+}
+
+/* ---------- events ---------- */
+$("start-btn").addEventListener("click", async ()=>{
+  if (!CAN_TAKE) {
+    setStatus("You have already taken today's test. Please come back tomorrow.", "error");
+    return;
   }
 
-  // 🧠 Generate Questions dynamically (topic, level, language)
-  async function generateQuestions() {
-    const topic = "Pointers";
-    const level = "Beginner";   // Beginner | Intermediate | Advanced
-    const language = "C";       // C | Python | Java | etc.
-    const pdfPath = "/path/to/LetUsC.pdf";  // Optional RAG reference PDF
+  setStatus("");
+  answers = {};
+  hintsUsed = 0;
+  $("hints-pill").textContent = `Hints: ${hintsUsed}`;
 
-    try {
-      const res = await fetch(`/api/questions/generate/?topic=${topic}&level=${level}&language=${language}&pdf=${pdfPath}`);
-      const data = await res.json();
-      console.log("Generated Questions:", data);
-      questions = data;
-      createTracker();
-      showQuestion(current);
-      startTimer();
-    } catch (err) {
-      console.error("Error generating questions:", err);
-      document.getElementById('question-text').textContent = 'Error generating questions.';
+  try{
+    questions = await fetchMCQs();
+  } catch(e){
+    console.error(e);
+    setStatus("❌ Failed to load questions.", "error");
+    return;
+  }
+
+  if(!questions.length){
+    setStatus("❌ No questions received.", "error");
+    return;
+  }
+
+  idx = 0;
+  buildTracker();
+  renderQuestion(idx);
+  startTimer();
+  setStatus("✅ Questions loaded!");
+});
+
+$("prev-btn").addEventListener("click", ()=>{
+  if(idx>0){
+    idx--;
+    renderQuestion(idx);
+  }
+});
+
+$("next-btn").addEventListener("click", ()=>{
+  if(idx < questions.length - 1){
+    idx++;
+    renderQuestion(idx);
+  }
+});
+
+$("hint-btn").addEventListener("click", async ()=>{
+  if(!questions[idx]) return;
+  const qtext = normalizeQ(questions[idx]).q;
+  $("hint").style.display = "block";
+  $("hint").textContent = "Loading hint…";
+  try{
+    const r = await fetch(HINT_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-CSRFToken": getCSRF() },
+      credentials: "include",
+      body: JSON.stringify({ question: qtext })
+    });
+    const resjson = await r.json();
+    $("hint").textContent = "💡 " + (resjson.hint || "Think about edge cases.");
+    hintsUsed++;
+    $("hints-pill").textContent = `Hints: ${hintsUsed}`;
+    setTimeout(()=> $("hint").style.display = "none", 9000);
+  }catch(err){
+    console.error(err);
+    $("hint").textContent = "Hint service unavailable.";
+    setTimeout(()=> $("hint").style.display = "none", 5000);
+  }
+});
+
+/* ---------- language selector: force Beginner when changing lang ---------- */
+const langSelect = $("lang-select");
+if (langSelect) {
+  langSelect.addEventListener("change", (e) => {
+    currentLang = e.target.value || "python";
+    currentLevel = "Beginner";  // 🔑 whenever user switches language, start from Beginner
+    $("ctx-pill").textContent = `Lang: ${currentLang} | Level: ${currentLevel}`;
+    setStatus("Language changed. Start a new test to load questions for this language.");
+    // If you want: clear existing questions & tracker when language changes
+    questions = [];
+    answers = {};
+    $("qnum").textContent = "";
+    $("qtext").textContent = "No question loaded yet.";
+    $("opts").innerHTML = "";
+    $("tracker").innerHTML = "";
+    $("progress").style.width = "0%";
+    clearInterval(timer);
+    $("timer-pill").textContent = "Time Left: 10:00";
+  });
+}
+
+/* ---------- submit logic ---------- */
+async function submitNow(){
+  clearInterval(timer);
+
+  if(!questions.length){
+    setStatus("Nothing to submit.", "error");
+    return;
+  }
+
+  // calculate score
+  let correct = 0;
+  questions.forEach((q,i)=>{
+    const picked = answers[i] || "";
+    let gold = q.answer || "";
+
+    const gu = (gold || "").toUpperCase();
+    if(["A","B","C","D"].includes(gu) && Array.isArray(q.options) && q.options.length >= 4){
+      const idxMap = { A:0, B:1, C:2, D:3 };
+      gold = q.options[idxMap[gu]];
     }
-  }
 
-  window.onload = () => {
-    loadUser();
-    // 🟢 Option 1: Load from DB
-    // loadQuestions();
-    // 🟢 Option 2: Generate fresh questions dynamically
-    generateQuestions();
+    if(picked === gold) correct++;
+  });
+
+  const total = questions.length;
+  const score = Math.round((correct/total)*100);
+  const timeTaken = TOTAL_SECONDS - remaining;
+
+  const payload = {
+    language: currentLang,
+    difficulty: currentLevel,
+    score: score,
+    hints_used: hintsUsed,
+    time_taken: timeTaken
   };
+
+  try{
+    const r = await fetch(SAVE_API, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCSRF()
+      },
+      credentials: "include",
+      body: JSON.stringify(payload)
+    });
+
+    // hard lock from backend (already took test today)
+    if (r.status === 403) {
+      let data = {};
+      try { data = await r.json(); } catch {}
+      alert(data.message || "You have already taken today's test. Please come back tomorrow.");
+      window.location.href = "/dashboard/";
+      return;
+    }
+
+    if(!r.ok){
+      const text = await r.text();
+      console.error("submit error response:", r.status, text);
+      setStatus("❌ Failed to save result (server error).", "error");
+      return;
+    }
+
+    const result = await r.json();
+
+    const nextLang = result.next_language || "";
+    const nextLvl  = result.next_level || "";
+    const canChoose = !!result.can_choose_next_language;
+    const repeatLevel = !!result.repeat_level;
+    const revisionTopics = result.revision_topics || [];
+
+    const params = new URLSearchParams({
+      score: String(score),
+      correct: String(correct),
+      total: String(total),
+      hints: String(hintsUsed),
+      time: String(timeTaken),
+      language: String(currentLang),
+      difficulty: String(currentLevel),
+      next_language: String(nextLang),
+      next_level: String(nextLvl),
+      can_choose_next_language: canChoose ? "true" : "false",
+    });
+
+    if (repeatLevel && revisionTopics.length) {
+      params.set("topics", JSON.stringify(revisionTopics));
+    }
+
+    window.location.href = "/test-result/?" + params.toString();
+
+  } catch(err){
+    console.error("submit exception:", err);
+    setStatus("❌ Network or server error while saving result.", "error");
+  }
+}
+
+$("submit-btn").addEventListener("click", submitNow);
+
+/* ---------- init ---------- */
+loadUser();
+if (!CAN_TAKE) {
+  $("start-btn").disabled = true;
+  setStatus("You have already taken today's test. Please come back tomorrow.");
+}
 </script>
 </body>
 </html>

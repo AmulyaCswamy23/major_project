@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="card">
+    <h2>Pick your language</h2>
+    <p>
+      Choose the language you want to focus on.  
+      <strong>You’ll always start at the <em>Beginner</em> level for the language you pick.</strong>
+    </p>
+
+    <form method="post">
+      {% csrf_token %}
+      <label for="language">Language</label>
+      <select name="language" id="language" required>
+        {% for lang in languages %}
+          <option value="{{ lang }}"
+                  {% if lang == current_language %}selected{% endif %}>
+            {{ lang|title }}
+          </option>
+        {% endfor %}
+      </select>
+
+      <button type="submit" style="margin-top:10px;">Save</button>
+    </form>
+
+    <p style="margin-top:10px; font-size:0.9rem; color:#666;">
+      After saving, your tests for this language will start from <strong>Beginner</strong>.
+      Daily cooldown rules still apply.
+    </p>
+  </div>
+{% endblock %}

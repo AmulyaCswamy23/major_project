@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test Result</title>
+  <style>
+    body {
+      background:#f4f7fa;
+      font-family: Poppins, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      padding:40px;
+      margin:0;
+    }
+    .card {
+      max-width:700px;
+      margin:auto;
+      background:#fff;
+      padding:28px;
+      border-radius:16px;
+      box-shadow:0 4px 12px rgba(0,0,0,.1);
+    }
+    .title {
+      font-size:26px;
+      font-weight:700;
+      margin-bottom:20px;
+    }
+    .metric-row {
+      margin-bottom:6px;
+    }
+    .metric-label {
+      font-weight:600;
+    }
+    .next {
+      background:#e7f7ff;
+      padding:12px 14px;
+      border-left:5px solid #4a90e2;
+      margin-top:20px;
+      border-radius:10px;
+    }
+    .repeat-block {
+      background:#fff7e6;
+      padding:14px 16px;
+      border-left:5px solid #f39c12;
+      margin-top:20px;
+      border-radius:10px;
+    }
+    .repeat-block h3 {
+      margin:0 0 8px 0;
+      font-size:18px;
+    }
+    .repeat-block ul {
+      margin:8px 0 0 20px;
+    }
+    .repeat-block li {
+      margin-bottom:4px;
+    }
+    .legend-block {
+      margin-top:20px;
+      padding:15px 16px;
+      background:#eaf4ff;
+      border-left:5px solid #3b82f6;
+      border-radius:10px;
+    }
+    .legend-block p {
+      margin:4px 0;
+    }
+    .btn {
+      display:inline-block;
+      padding:12px 20px;
+      border-radius:8px;
+      text-decoration:none;
+      font-weight:600;
+      font-size:14px;
+      margin-top:12px;
+    }
+    .btn-primary { background:#4a90e2; color:#fff; }
+    .btn-secondary { background:#eee; color:#333; }
+    .btn-success { background:#10b981; color:#fff; }
+    .btn + .btn {
+      margin-left:8px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="title">✅ Test Completed</div>
+
+  <p class="metric-row"><span class="metric-label">Score:</span> {{ score }}%</p>
+  <p class="metric-row"><span class="metric-label">Correct:</span> {{ correct }} / {{ total }}</p>
+  <p class="metric-row"><span class="metric-label">Hints Used:</span> {{ hints }}</p>
+  <p class="metric-row"><span class="metric-label">Time Taken:</span> {{ time }} seconds</p>
+  <p class="metric-row">
+    <span class="metric-label">Language:</span> {{ language }}
+    &nbsp;|&nbsp;
+    <span class="metric-label">Level:</span> {{ difficulty }}
+  </p>
+
+  {# ---------- If RL kept same level: show topics to revise ---------- #}
+  {% if revision_topics %}
+    <div class="repeat-block">
+      <h3>📚 Stay on this level & revise</h3>
+      <p>You’ll stay at <b>{{ language }}</b> – <b>{{ difficulty }}</b> for now.</p>
+      <p>Before your next test (available tomorrow), focus on these topics:</p>
+      <ul>
+        {% for t in revision_topics %}
+          <li>{{ t }}</li>
+        {% endfor %}
+      </ul>
+      <p style="margin-top:10px;"><b>Note:</b> You can take the next test again tomorrow.</p>
+    </div>
+  {% endif %}
+
+  {# ---------- Next recommended step (from RL/rules) ---------- #}
+  {% if next_language %}
+    <div class="next">
+      <p><b>Next Recommended Step:</b></p>
+      <p><b>Language:</b> {{ next_language }}</p>
+      <p><b>Level:</b> {{ next_level }}</p>
+      <p style="margin-top:6px;">
+        For your next test, you can also change the language yourself.
+        When you switch, you’ll always start at <b>Beginner</b> for that language.
+      </p>
+    </div>
+  {% else %}
+    <div class="next">
+      <p><b>🎉 Keep going!</b></p>
+      <p>Your next test will follow your current learning path.</p>
+      <p style="margin-top:6px;">
+        You can change the language for your next test any time — it will always begin at
+        <b>Beginner</b> for that language.
+      </p>
+    </div>
+  {% endif %}
+
+  {# ---------- Optional: still celebrate Python Legend, but not gate language choice ---------- #}
+  {% if can_choose_next_language == "true" %}
+    <div class="legend-block">
+      <p><b>🔥 Python Legend Unlocked!</b></p>
+      <p>You now have the <b>Python Legend</b> badge. 🎖️ Amazing work!</p>
+      <p>Keep exploring other languages from the test page whenever you like.</p>
+    </div>
+  {% endif %}
+
+  <div style="margin-top:24px;">
+    <a href="{% url 'dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+  </div>
+</div>
+
+</body>
+</html>
