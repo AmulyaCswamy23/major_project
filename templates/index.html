@@ -401,6 +401,94 @@
       grid-template-columns: 1fr;
     }
   }
+
+  /* Chatbot Widget */
+  .chatbot-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #0b3d91;
+    color: #fff;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  }
+
+  .chatbot-window {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 320px;
+    max-height: 480px;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.25);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid #e6e6e6;
+  }
+
+  .chatbot-header {
+    background: #0b3d91;
+    color: #fff;
+    padding: 12px 16px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .chatbot-messages {
+    flex: 1;
+    padding: 12px;
+    overflow-y: auto;
+    background: #f5f6fa;
+  }
+
+  .chatbot-input {
+    display: flex;
+    border-top: 1px solid #ddd;
+  }
+
+  .chatbot-input input {
+    flex: 1;
+    border: none;
+    padding: 12px;
+    outline: none;
+  }
+
+  .chatbot-input button {
+    border: none;
+    background: #0b3d91;
+    color: #fff;
+    padding: 0 16px;
+    cursor: pointer;
+  }
+
+  .msg {
+    margin: 6px 0;
+    padding: 8px 10px;
+    border-radius: 8px;
+    max-width: 85%;
+    font-size: 0.9rem;
+  }
+
+  .user-msg {
+    background: #d9e6ff;
+    align-self: flex-end;
+  }
+
+  .bot-msg {
+    background: #fff;
+    border: 1px solid #e3e3e3;
+  }
   </style>
 </head>
 
@@ -449,24 +537,25 @@
   <div class="features-container">
     <div class="feature-card">
       <img src="{% static 'img/notes.png' %}" alt="Notes">
-      <h3>Notes</h3>
+      <a href="https://www.geeksforgeeks.org/tutorials/articles-on-computer-science-subjects-gq/" target="_blank" class="feature-link">
+        <h3>Notes</h3>
+      </a>
       <p>Concise notes for all core engineering subjects.</p>
+      
     </div>
     <div class="feature-card">
       <img src="{% static 'img/papers.png' %}" alt="Previous Papers">
-      <h3>Previous Papers</h3>
+       <a href="https://vtu.ac.in/model-question-paper-b-e-b-tech-b-arch/" target="_blank" class="feature-link">
+        <h3>Prevois Year Papers</h3>
+      </a>
       <p>Search past year papers with solutions.</p>
     </div>
     <div class="feature-card">
       <img src="{% static 'img/projects.png' %}" alt="Projects">
-      <h3>Projects</h3>
+       <a href="https://github.com/topics/engineering-project" target="_blank" class="feature-link">
+        <h3>Projects</h3>
+      </a>
       <p>Get project ideas with clear requirements & tech stack.</p>
-    </div>
-    <div class="feature-card">
-      <img src="{% static 'img/resources.png' %}" alt="Resources">
-      <h3>Resources</h3>
-      <p>Links to tutorials, cheat-sheets, and coding practice.</p>
-    </div>
   </div>
 </section>
 
@@ -504,7 +593,7 @@
         <h3>Full Stack Development with React & Node JS</h3>
         <p>Project Based Training</p>
         <p class="level">👨‍🎓 Beginner to Advance</p>
-        <a href="#" class="explore-btn">Explore now</a>
+        <a href="https://www.youtube.com/watch?v=F4zr1aMevB4" class="explore-btn">Explore now</a>
       </div>
     </div>
     <div class="course-card">
@@ -516,7 +605,7 @@
         <h3>Tech Interview of DSA</h3>
         <p>Complete Interview Preparation</p>
         <p class="level">👨‍🎓 Beginner to Advance</p>
-        <a href="#" class="explore-btn">Explore now</a>
+        <a href="https://www.youtube.com/watch?v=F4zr1aMevB4" class="explore-btn">Explore now</a>
       </div>
     </div>
     <div class="course-card">
@@ -528,7 +617,7 @@
         <h3>C++ Programming Course - Complete Beginner to Advanced</h3>
         <p>Master C++ with Hands-on</p>
         <p class="level">👨‍🎓 Beginner to Advance</p>
-        <a href="#" class="explore-btn">Explore now</a>
+        <a href="https://www.youtube.com/watch?v=-TkoO8Z07hI" class="explore-btn">Explore now</a>
       </div>
     </div>
   </div>
@@ -542,7 +631,7 @@
       <div class="contact-info">
         <div class="info-box">
           <h3>📍 Our Address</h3>
-          <p>123 Engineering Lane, Tech City, India</p>
+          <p>SIT, Tuamkuru, Karnataka, India</p>
         </div>
         <div class="info-box">
           <h3>📞 Call Us</h3>
@@ -569,7 +658,6 @@
         </form>
       </div>
     </div>
-    <p class="cta-text">💡 We’ll get back to you within 24 hours!</p>
   </div>
 </section>
 
@@ -577,12 +665,78 @@
   <p>© <span id="year"></span> EduLearn. All rights reserved.</p>
 </footer>
 
+<!-- Chatbot Toggle Button -->
+<div class="chatbot-toggle" id="chatbotToggle">💬</div>
+
+<!-- Chatbot Window -->
+<div class="chatbot-window" id="chatbotWindow">
+  <div class="chatbot-header">
+    <span>Ask EduLearn</span>
+    <span style="cursor:pointer" onclick="toggleChatbot()">✖</span>
+  </div>
+  <div class="chatbot-messages" id="chatMessages"></div>
+  <div class="chatbot-input">
+    <input id="chatInput" type="text" placeholder="Type your question..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
 <script>
 function toggleMenu() {
   const nav = document.getElementById('navLinks');
   nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
 }
 document.getElementById('year').textContent = new Date().getFullYear();
+
+// Chatbot widget behaviour
+const chatbotToggle = document.getElementById('chatbotToggle');
+const chatbotWindow = document.getElementById('chatbotWindow');
+const chatMessages = document.getElementById('chatMessages');
+const chatInput = document.getElementById('chatInput');
+
+chatbotToggle.addEventListener('click', toggleChatbot);
+
+function toggleChatbot() {
+  chatbotWindow.style.display = chatbotWindow.style.display === 'flex' ? 'none' : 'flex';
+}
+
+function addMessage(text, type) {
+  const msg = document.createElement('div');
+  msg.classList.add('msg');
+  msg.classList.add(type === 'user' ? 'user-msg' : 'bot-msg');
+  msg.innerText = text;
+  chatMessages.appendChild(msg);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function sendMessage() {
+  const text = chatInput.value.trim();
+  if (!text) return;
+
+  addMessage(text, 'user');
+  chatInput.value = '';
+
+  fetch('/chatbot/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ message: text })
+  })
+  .then(res => res.json())
+  .then(data => {
+    addMessage(data.reply || "No response received.", 'bot');
+  })
+  .catch(() => {
+    addMessage("Oops! Server error.", 'bot');
+  });
+}
+
+chatInput.addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    sendMessage();
+  }
+});
 </script>
 
 </body>

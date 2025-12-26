@@ -1105,3 +1105,36 @@ def choose_preferred_language_page(request):
             "current_language": path.current_language,
         },
     )
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+import requests
+
+@csrf_exempt
+def chatbot_reply(request):
+    if request.method == "POST":
+        data = json.loads(request.body.decode("utf-8"))
+        user_msg = data.get("message", "")
+
+        try:
+            # Call phi3:mini through Ollama API
+            response = requests.post(
+                "http://localhost:11434/api/generate",
+                json={
+                    "model": "phi3:mini",
+                    "prompt": user_msg,
+                    "stream": False
+                },
+                timeout=60
+            )
+
+            result = response.json()
+            bot_reply = result.get("response", "Sorry, I couldn't process that.")
+
+        except Exception as e:
+            bot_reply = "AI service is currently unavailable."
+
+        return JsonResponse({"reply": bot_reply})
+
+    return JsonResponse({"error": "Invalid request"}, status=400)

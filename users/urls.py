@@ -20,4 +20,5 @@ urlpatterns = [
     path("roadmap/pdf/", views.roadmap_pdf, name="roadmap_pdf"),
     path("choose-language/", views.choose_preferred_language_page, name="choose_preferred_language"),
     path("choose-next-language/", views.choose_next_language, name="choose_next_language"),
+     path('chatbot/', views.chatbot_reply, name='chatbot'),
 ]
